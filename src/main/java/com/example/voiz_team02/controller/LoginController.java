@@ -39,8 +39,8 @@ public class LoginController{
         }else {
             ArrayList<Register> user = repo.findByEmailAddressAndPassword(login.getEmailAddress(), login.getPassword());
             login.setEmailAddress(login.getEmailAddress());
-            order.setUserId(login.getEmailAddress());
             if (user.isEmpty()) {
+                errors.rejectValue("password","password.invalid","Incorrect password!");
                 return "login";
             }
             return "redirect:/dashboard";

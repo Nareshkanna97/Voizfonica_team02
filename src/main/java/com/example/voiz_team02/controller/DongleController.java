@@ -6,6 +6,7 @@ import com.example.voiz_team02.data.OrderRepository;
 import com.example.voiz_team02.model.DonglePlans;
 
 
+import com.example.voiz_team02.model.Login;
 import com.example.voiz_team02.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/dongle")
-@SessionAttributes("order")
+@SessionAttributes({"login","order"})
 public class DongleController {
     @Autowired
     private OrderRepository orderRepo;
@@ -45,7 +46,8 @@ public class DongleController {
         return "dongle";
     }
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public String processOrder(@PathVariable String id, @ModelAttribute Order order, Model model){
+    public String processOrder(@PathVariable String id,@SessionAttribute("login") Login login, @ModelAttribute Order order, Model model){
+        order.setUserId(login.getEmailAddress());
         order.setDongleId(id);
         orderRepo.save(order);
         return "redirect:/payment";

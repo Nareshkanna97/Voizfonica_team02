@@ -2,6 +2,7 @@ package com.example.voiz_team02.controller;
 
 import com.example.voiz_team02.data.OrderRepository;
 import com.example.voiz_team02.data.PrepaidRepository;
+import com.example.voiz_team02.model.Login;
 import com.example.voiz_team02.model.Order;
 import com.example.voiz_team02.model.PrepaidPlans;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/prepaid")
-@SessionAttributes("order")
+@SessionAttributes({"login","order"})
 public class PrepaidController{
     @Autowired
     private OrderRepository orderRepo;
@@ -39,7 +40,8 @@ public class PrepaidController{
         return "prepaid";
     }
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public String processOrder(@PathVariable String id, @ModelAttribute Order order, Model model){
+    public String processOrder(@PathVariable String id,@SessionAttribute("login") Login login, @ModelAttribute Order order){
+        order.setUserId(login.getEmailAddress());
         order.setPrePaidId(id);
         orderRepo.save(order);
         return "redirect:/payment";
